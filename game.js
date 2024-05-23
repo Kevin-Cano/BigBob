@@ -5,12 +5,24 @@ let config = {
         height: innerHeight,
     },
     backgroundColor: '#575555',
-    
+    physic: {
+        default: 'gameMode',
+        gameMode: {
+            gravity: {
+                y: 1000,
+            },
+        }
+    },
     scene: {
         preload: preload,
         create: create,
         update: update,
     }
+}
+
+let playerConfig = {
+    playerSpeed: 100,
+    playerJump: -250,
 }
 
 let game = new Phaser.Game(config);
