@@ -5,9 +5,9 @@ let config = {
         height: innerHeight,
     },
     backgroundColor: '#575555',
-    physic: {
-        default: 'gameMode',
-        gameMode: {
+    physics: {
+        default: 'arcade',
+        arcade: {
             gravity: {
                 y: 1000,
             },
@@ -21,8 +21,8 @@ let config = {
 }
 
 let playerConfig = {
-    playerSpeed: 100,
-    playerJump: -250,
+    playerSpeed: 200,
+    playerJump: -500,
 }
 
 let game = new Phaser.Game(config);
@@ -35,12 +35,33 @@ function preload() {
 function create() {
     W = game.config.width;
     H = game.config.height;
+    
     let ground = this.add.tileSprite(0, H - 48, W, 48, "ground");
     ground.setOrigin(0, 0);
 
-    this.player = this.add.sprite(40, 540, 'BigBob', 8);
+    this.physics.add.existing(ground, true);
+    this.player = this.physics.add.sprite(40, 540, 'BigBob');
+    this.player.setCollideWorldBounds(true);
+
+    this.physics.add.collider(this.player, ground);
+
+    this.cursors = this.input.keyboard.createCursorKeys();
 }
 
 function update() {
+    this.player.setVelocityX(0);
 
+    if (this.cursors.left.isDown) {
+        this.player.setVelocityX(-playerConfig.playerSpeed);
+    } else if (this.cursors.right.isDown) {
+        this.player.setVelocityX(playerConfig.playerSpeed);
+    }
+
+    if (this.cursors.up.isDown && this.player.body.touching.down) {
+        this.player.setVelocityY(playerConfig.playerJump);
+    }
+
+    if (this.cursors.down.isDown) {
+        this.player.setVelocityY(playerConfig.playerSpeed);
+    }
 }
