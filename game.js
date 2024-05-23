@@ -30,6 +30,7 @@ let game = new Phaser.Game(config);
 function preload() {
     this.load.image("ground", "assets/ground.png");
     this.load.image("BigBob", "assets/BigBob.png");
+    this.load.image("bloc", "assets/bloc.png");
 }
 
 function create() {
@@ -40,7 +41,7 @@ function create() {
     ground.setOrigin(0, 0);
 
     this.physics.add.existing(ground, true);
-    this.player = this.physics.add.sprite(40, 540, 'BigBob');
+    this.player = this.physics.add.sprite(40, 50, 'BigBob');
     this.player.setCollideWorldBounds(true);
 
     this.physics.add.collider(this.player, ground);
@@ -53,6 +54,26 @@ function create() {
         down: Phaser.Input.Keyboard.KeyCodes.S,
         right: Phaser.Input.Keyboard.KeyCodes.D,
     });
+
+    let blocs = this.physics.add.staticGroup();
+    blocs.create(250, 560, "bloc").refreshBody()
+    blocs.create(300, 560, "bloc").refreshBody();
+    blocs.create(350, 560, "bloc").refreshBody()
+    blocs.create(400, 560, "bloc").refreshBody();
+    blocs.create(450, 560, "bloc").refreshBody()
+    blocs.create(350, 450, "bloc").refreshBody();
+
+    let platforms = this.physics.add.staticGroup();
+    platforms.add(ground);
+
+    this.physics.add.collider(platforms, this.player)
+    this.physics.add.collider(this.player, blocs);
+    
+    this.cameras.main.setBounds(0, 0, W, H);
+    this.physics.world.setBounds(0, 0, W, H);
+
+    this.cameras.main.startFollow(this.player, true, true);
+    this.cameras.main.setZoom(1.2);
 }
 
 function update() {
