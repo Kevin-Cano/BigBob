@@ -1,7 +1,7 @@
 let config = {
     type: Phaser.AUTO,
     scale: {
-        width: 1370,
+        width: 1500,
         height: window.innerHeight, // Ajustement de la hauteur en fonction de la fenêtre
     },
     backgroundColor: '#575555',
@@ -34,17 +34,48 @@ function preload() {
     this.load.image("ground", "assets/ground.png");
     this.load.image("BigBob", "assets/BigBob.png");
     this.load.image("bloc", "assets/bloc.png");
+    this.load.image("sandwich", "assets/sandwich.png");
+    this.load.atlas('ui', 'assets/nine-slice.png', 'assets/nine-slice.json');
+    this.load.image("prisonner", 'assets/prisonner.png');
+    this.load.image("grille", 'assets/grille.png');
 }
 
 function create() {
     W = game.config.width;
     H = game.config.height;
+    let grille = this.add.group({
+        key: "grille",
+        repeat: 10,
+        setScale: { x: 1, y: 2 },
+        setXY: { x: 200, y: 522, stepX: 78 },
+
+    })
+    let grille2 = this.add.group({
+        key: "grille",
+        repeat: 50,
+        setScale: { x: 1, y: 2 },
+        setXY: { x: 1136, y: 522, stepX: 78 },
+
+    })
+    let grilleH = this.add.group({
+        key: "grille",
+        repeat: 50,
+        setScale: { x: 1, y: 2 },
+        setXY: { x: 44, y: 260, stepX: 78 },
+
+    })
+
+
+    let grilleSolo = this.add.sprite(44, 522, "grille").setScale(1, 2)
+    let prisonner = this.add.sprite(122, 522, "prisonner").setScale(1, 1)
+    let prisonner2 = this.add.sprite(1058, 522, "prisonner").setScale(1, 1)
     
     let ground = this.add.tileSprite(0, H - 48, 5000, 48, "ground");
     ground.setOrigin(0, 0);
+    this.player = this.physics.add.sprite(40, 50, 'BigBob'); 
 
     this.physics.add.existing(ground, true);
-    this.player = this.physics.add.sprite(40, 50, 'BigBob'); 
+    
     this.player.setCollideWorldBounds(true);
 
     this.physics.add.collider(this.player, ground);
@@ -59,7 +90,31 @@ function create() {
         shift: Phaser.Input.Keyboard.KeyCodes.SHIFT
     });
 
+
+
+    let heal = this.physics.add.group({
+        key: "sandwich",
+        repeat: 20,
+        setScale: { x: 1, y: 1 },
+        setXY: { x: 200, y: 100, stepX: 350 },
+
+    })
+
+    const bar1 = this.add.nineslice(150, 170, 'ui', 'yellow_button06');
+        const fill1 = this.add.nineslice(20, 170, 'ui', 'yellow_button07', 13, 99, 1);
+
+        fill1.setOrigin(0, 0.5);
+        this.tweens.add({
+            targets: fill1,
+            width: 258,
+            duration: 3000,
+        });
+
     let blocs = this.physics.add.staticGroup();
+
+    heal.create(500, H - 500, "sandwich").refreshBody();
+
+
     
     // Platforme de départ
     blocs.create(250, H - 100, "bloc").refreshBody();
@@ -117,6 +172,11 @@ function create() {
 
     this.physics.add.collider(platforms, this.player);
     this.physics.add.collider(this.player, blocs);
+
+    this.physics.add.collider(platforms, heal);
+    this.physics.add.collider(blocs, heal);
+    this.physics.add.collider(this.player, heal);
+    this.physics.add.overlap(this.player, heal, eatSandwich, null, this);
     
     this.cameras.main.setBounds(0, 0, 5000, H); 
     this.physics.world.setBounds(0, 0, 5000, H); 
@@ -129,6 +189,9 @@ function create() {
     this.lastDash = 0;
     this.isDashing = false;
     this.dashEndTime = 0;
+
+    
+
 }
 
 function update(time, delta) {
@@ -176,4 +239,8 @@ function update(time, delta) {
             this.lastDash = currentTime;
         }
     }
+}
+
+function eatSandwich(player, sandwich) {
+    sandwich.disableBody(true, true)
 }
