@@ -2,7 +2,7 @@ let config = {
     type: Phaser.AUTO,
     scale: {
         width: 1370,
-        height: window.innerHeight, // Ajustement de la hauteur en fonction de la fenêtre
+        height: window.innerHeight, 
     },
     backgroundColor: '#575555',
     physics: {
@@ -40,7 +40,7 @@ function create() {
     W = game.config.width;
     H = game.config.height;
     
-    let ground = this.add.tileSprite(0, H - 48, W, 48, "ground");
+    let ground = this.add.tileSprite(0, H - 48, 5000, 48, "ground");
     ground.setOrigin(0, 0);
 
     this.physics.add.existing(ground, true);
@@ -60,12 +60,57 @@ function create() {
     });
 
     let blocs = this.physics.add.staticGroup();
-    blocs.create(250, 560, "bloc").refreshBody();
-    blocs.create(300, 560, "bloc").refreshBody();
-    blocs.create(350, 560, "bloc").refreshBody();
-    blocs.create(400, 560, "bloc").refreshBody();
-    blocs.create(450, 560, "bloc").refreshBody();
-    blocs.create(350, 450, "bloc").refreshBody();
+    
+    // Platforme de départ
+    blocs.create(250, H - 100, "bloc").refreshBody();
+    blocs.create(300, H - 100, "bloc").refreshBody();
+    blocs.create(350, H - 100,"bloc").refreshBody();
+    blocs.create(400, H - 100, "bloc").refreshBody();
+
+    // Premier saut
+    blocs.create(600, H - 150, "bloc").refreshBody();
+    blocs.create(650, H - 150, "bloc").refreshBody();
+
+    // Deuxième plateforme plus haute
+    blocs.create(900, H - 250, "bloc").refreshBody();
+    blocs.create(950, H - 250, "bloc").refreshBody();
+    blocs.create(1000, H - 250, "bloc").refreshBody();
+
+    // Descente
+    blocs.create(1150, H - 350, "bloc").refreshBody();
+    blocs.create(1200, H - 350, "bloc").refreshBody();
+
+    // Longue plateforme
+    blocs.create(1400, H - 200, "bloc").refreshBody();
+    blocs.create(1450, H - 200, "bloc").refreshBody();
+    blocs.create(1500, H - 200, "bloc").refreshBody();
+    blocs.create(1550, H - 200, "bloc").refreshBody();
+    blocs.create(1600, H - 200, "bloc").refreshBody();
+
+    // Montée finale
+    blocs.create(1800, H - 300, "bloc").refreshBody();
+    blocs.create(1850, H - 300, "bloc").refreshBody();
+    blocs.create(1900, H - 400, "bloc").refreshBody();
+    blocs.create(1950, H - 400, "bloc").refreshBody();
+
+    // Nouvelle section étendue du niveau
+    blocs.create(2200, H - 200, "bloc").refreshBody();
+    blocs.create(2250, H - 200, "bloc").refreshBody();
+    blocs.create(2300, H - 200, "bloc").refreshBody();
+    blocs.create(2350, H - 200, "bloc").refreshBody();
+    blocs.create(2400, H - 200, "bloc").refreshBody();
+
+    blocs.create(2600, H - 300, "bloc").refreshBody();
+    blocs.create(2650, H - 300, "bloc").refreshBody();
+    blocs.create(2700, H - 300, "bloc").refreshBody();
+
+    blocs.create(2900, H - 400, "bloc").refreshBody();
+    blocs.create(2950, H - 400, "bloc").refreshBody();
+
+    blocs.create(3200, H - 350, "bloc").refreshBody();
+    blocs.create(3250, H - 350, "bloc").refreshBody();
+    blocs.create(3300, H - 350, "bloc").refreshBody();
+    blocs.create(3350, H - 350, "bloc").refreshBody();
 
     let platforms = this.physics.add.staticGroup();
     platforms.add(ground);
@@ -73,10 +118,10 @@ function create() {
     this.physics.add.collider(platforms, this.player);
     this.physics.add.collider(this.player, blocs);
     
-    this.cameras.main.setBounds(0, 0, W, H);
-    this.physics.world.setBounds(0, 0, W, H);
+    this.cameras.main.setBounds(0, 0, 5000, H); 
+    this.physics.world.setBounds(0, 0, 5000, H); 
 
-    this.cameras.main.startFollow(this.player, true, true);
+    this.cameras.main.startFollow(this.player, true, 0.05, 0.05);
     this.cameras.main.setZoom(1.2);
 
     this.lastLeftPressTime = 0;
