@@ -2,7 +2,7 @@ let config = {
     type: Phaser.AUTO,
     scale: {
         width: 1370,
-        height: window.innerHeight, 
+        height: window.innerHeight, // Ajustement de la hauteur en fonction de la fenêtre
     },
     backgroundColor: '#575555',
     physics: {
@@ -64,7 +64,7 @@ function create() {
     // Platforme de départ
     blocs.create(250, H - 100, "bloc").refreshBody();
     blocs.create(300, H - 100, "bloc").refreshBody();
-    blocs.create(350, H - 100,"bloc").refreshBody();
+    blocs.create(350, H - 100, "bloc").refreshBody();
     blocs.create(400, H - 100, "bloc").refreshBody();
 
     // Premier saut
@@ -155,10 +155,12 @@ function update(time, delta) {
             velocityX = -playerConfig.playerSpeed; 
             this.lastLeftPressTime = currentTime;
             startDash.call(this, -playerConfig.dashSpeed, currentTime);
+            this.player.setFlipX(true); 
         } else if (this.cursors.right.isDown || this.keys.right.isDown) {
             velocityX = playerConfig.playerSpeed; 
             this.lastRightPressTime = currentTime;
             startDash.call(this, playerConfig.dashSpeed, currentTime);
+            this.player.setFlipX(false); 
         }
 
         if (!this.isDashing) {
